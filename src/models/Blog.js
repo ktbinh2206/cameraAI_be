@@ -82,7 +82,6 @@ blogSchema.virtual('excerpt').get(function() {
 
 // Index for better search performance
 blogSchema.index({ title: 'text', content: 'text' });
-blogSchema.index({ slug: 1 });
 blogSchema.index({ published: 1 });
 blogSchema.index({ createdAt: -1 });
 

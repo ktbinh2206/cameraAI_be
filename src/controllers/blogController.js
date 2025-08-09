@@ -57,9 +57,10 @@ const getBlogs = async (req, res) => {
       .sort(sortOption)
       .skip(skip)
       .limit(limit)
-      .select('-__v');
+      .select('-__v')
+      .maxTimeMS(20000); // 20 second timeout
     
-    const total = await Blog.countDocuments(query);
+    const total = await Blog.countDocuments(query).maxTimeMS(10000); // 10 second timeout
     
     res.json({
       success: true,
@@ -72,6 +73,25 @@ const getBlogs = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('❌ Error fetching blogs:', error);
+    
+    // Handle specific MongoDB errors
+    if (error.name === 'MongooseError' || error.name === 'MongoNetworkError') {
+      return res.status(503).json({
+        success: false,
+        message: 'Database connection error. Please try again later.',
+        error: 'Service temporarily unavailable'
+      });
+    }
+    
+    if (error.name === 'MongoTimeoutError') {
+      return res.status(408).json({
+        success: false,
+        message: 'Database operation timed out. Please try again.',
+        error: 'Request timeout'
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: 'Error fetching blog posts',
