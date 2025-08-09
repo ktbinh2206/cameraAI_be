@@ -3,12 +3,11 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const connectDB = require('./config/database');
-const errorHandler = require('./middleware/errorHandler');
-const routes = require('./routes');
+const connectDB = require('../src/config/database');
+const errorHandler = require('../src/middleware/errorHandler');
+const routes = require('../src/routes');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 // Connect to MongoDB
 connectDB();
@@ -19,7 +18,7 @@ app.use(helmet());
 // CORS middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL || ['https://your-frontend-domain.vercel.app', 'https://camera-ai-frontend.vercel.app']
+    ? ['https://your-frontend-domain.vercel.app', 'https://camera-ai-frontend.vercel.app'] 
     : ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true
 }));
@@ -40,8 +39,9 @@ app.use('/api', routes);
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'Camera AI Blog API',
+    message: 'Camera AI Blog API - Deployed on Vercel',
     version: '1.0.0',
+    environment: process.env.NODE_ENV,
     endpoints: {
       health: '/api/health',
       blogs: '/api/blogs',
@@ -62,30 +62,5 @@ app.use('*', (req, res) => {
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('👋 SIGTERM received, shutting down gracefully');
-  process.exit(0);
-});
-
-process.on('SIGINT', () => {
-  console.log('👋 SIGINT received, shutting down gracefully');
-  process.exit(0);
-});
-
-// Start server
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`📝 API endpoints: http://localhost:${PORT}/api/blogs`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`❌ Unhandled Rejection: ${err.message}`);
-  server.close(() => {
-    process.exit(1);
-  });
-});
-
+// Export the app for Vercel
 module.exports = app;

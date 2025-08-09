@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed": "node src/scripts/seed.js"
+    "seed": "node src/scripts/seed.js",
+    "vercel-build": "echo 'No build step needed'",
+    "deploy": "vercel --prod"
   },
   "keywords": ["blog", "crud", "api", "express", "mongodb"],
   "author": "",

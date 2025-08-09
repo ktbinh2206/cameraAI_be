@@ -90,3 +90,6 @@ logs
 
 # Old data files (if migrating from JSON storage)
 data/
+
+# Vercel
+.vercel
