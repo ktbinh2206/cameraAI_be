@@ -12,6 +12,11 @@ const blogSchema = new mongoose.Schema({
     required: [true, 'Content is required'],
     trim: true
   },
+  thumbnail: {
+    type: String,
+    trim: true,
+    default: null
+  },
   author: {
     type: String,
     required: [true, 'Author is required'],
