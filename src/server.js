@@ -17,12 +17,12 @@ connectDB();
 app.use(helmet());
 
 // CORS middleware
-// app.use(cors({
-//   origin: process.env.NODE_ENV === 'production' 
-//     ? process.env.FRONTEND_URL || ['https://your-frontend-domain.vercel.app', 'https://camera-ai-frontend.vercel.app']
-//     : ['http://localhost:3000', 'http://localhost:3001'],
-//   credentials: true
-// }));
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://www.cameraai.vn', 'https://cameraai.vn', 'https://camera-ai-be.vercel.app']
+    : ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true
+}));
 
 // Logging middleware
 if (process.env.NODE_ENV === 'development') {
