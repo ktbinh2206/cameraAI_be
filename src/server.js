@@ -18,9 +18,7 @@ app.use(helmet());
 
 // CORS middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://www.cameraai.vn', 'https://cameraai.vn', 'https://camera-ai-be.vercel.app']
-    : ['http://localhost:3000', 'http://localhost:3001'],
+  origin: true,
   credentials: true
 }));
 
